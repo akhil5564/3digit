@@ -1,7 +1,7 @@
 import React, { FC, useRef, useState } from 'react';
 import './home.css';
 
-interface HomeProps {}
+interface HomeProps { }
 
 const Home: FC<HomeProps> = () => {
     const [firstInput, setFirstInput] = useState('');
@@ -125,8 +125,8 @@ const Home: FC<HomeProps> = () => {
                     </div>
                 </div>
                 <div>
-                <button onClick={handleSave}>Save</button>
-                <button onClick={handleAdd}>Add</button>
+                    <button onClick={handleSave}>Save</button>
+                    <button onClick={handleAdd}>Add</button>
                 </div>
 
                 {/* Display confirmation message */}
