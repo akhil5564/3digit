@@ -7,7 +7,7 @@ import Winning from './pages/Winning';
 import Header from './components/Header'; // Import the Header component
 
 // ProtectedRoute component that checks if the user is logged in
-const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
+const ProtectedRoute = ({ element }: { element: React.ReactNode }) => {
   const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
 
   // If not logged in, redirect to login page
@@ -16,7 +16,7 @@ const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
   }
 
   // If logged in, show the protected route
-  return element;
+  return <>{element}</>;
 };
 
 function App() {
