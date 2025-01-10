@@ -2,7 +2,6 @@
 interface ReportProps {
     dataList: any[];
 }
-
 const Report: React.FC<ReportProps> = ({ dataList }) => {
     return (
         <div className="report">
