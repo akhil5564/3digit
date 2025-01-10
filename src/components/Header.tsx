@@ -1,35 +1,31 @@
-import { FC, useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';  // Import useNavigate and useLocation
-import './header.css';
-import { IconClipboardCopy } from '@tabler/icons-react';
+import { FC, useState } from 'react';
+import { useNavigate } from 'react-router-dom';  // Import useNavigate from react-router-dom
+import './header.css';  // Your CSS file for styling
+import { IconClipboardCopy } from '@tabler/icons-react';  // Importing icons from Tabler Icons
 import { IconAlignJustified } from '@tabler/icons-react';
 
-interface HeaderProps { }
-
-const Header: FC<HeaderProps> = () => {
+const Header: FC = () => {
   // State to control the dropdown visibility
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();  // Initialize navigate hook
-  const location = useLocation();  // To get current route for active link styling
-
-  const [calcResult, setCalcResult] = useState("345=5"); // Example result to copy (can be dynamic)
+  const [calcResult] = useState<string>("345=5"); // Example result to copy (can be dynamic)
 
   // Function to toggle dropdown visibility
   const toggleDropdown = () => {
     setIsDropdownOpen(prevState => !prevState);
   };
 
-  // Function to handle navigation
-  const handleNavigation = (path: string) => {
-    navigate(path);
-    setIsDropdownOpen(false);  // Close dropdown after navigation
-  };
+  // Navigation functions
+  const handleReportClick = () => navigate("/report");
+  const handleSetLimitClick = () => navigate("/set-limit");
+  const handleWinningClick = () => navigate("/winning");
 
   // Function to handle logout
   const handleLogoutClick = () => {
-    // Clear login-related data
+    // Clear the login-related data (if any)
     localStorage.removeItem("isLoggedIn");  // Or sessionStorage.removeItem('isLoggedIn');
-    navigate("/");  // Navigate to login page
+    // Navigate back to the login page
+    navigate("/");  // Navigate to the login page
   };
 
   // Function to copy the content to clipboard
@@ -41,19 +37,16 @@ const Header: FC<HeaderProps> = () => {
     });
   };
 
-  // Highlight active link based on current location
-  const getActiveClass = (path: string) => {
-    return location.pathname === path ? 'active' : '';
-  };
-
   return (
     <>
       <div className='calc'>
         <div className='icon'>
+          {/* Toggle dropdown */}
           <IconAlignJustified stroke={4} onClick={toggleDropdown} />
         </div>
         <h1>Calculator</h1>
         <div className='icon2'>
+          {/* Copy to clipboard */}
           <IconClipboardCopy stroke={3} onClick={handleCopy} />
         </div>
       </div>
@@ -62,14 +55,13 @@ const Header: FC<HeaderProps> = () => {
       {isDropdownOpen && (
         <div className='dropdown'>
           <ul>
-            <li className={getActiveClass("/home")} onClick={() => handleNavigation("/home")}>Home</li>
-            <li className={getActiveClass("/report")} onClick={() => handleNavigation("/report")}>Report</li>
-            <li className={getActiveClass("/set-limit")} onClick={() => handleNavigation("/set-limit")}>Set Limit</li>
-            <li className={getActiveClass("/winning")} onClick={() => handleNavigation("/winning")}>Winning</li>
-            <li className={getActiveClass("/delete-number")} onClick={() => handleNavigation("/delete-number")}>Delete Number</li>
-            <li className={getActiveClass("/profit-loss")} onClick={() => handleNavigation("/profit-loss")}>Profit and Loss</li>
-            <li className={getActiveClass("/result-entry")} onClick={() => handleNavigation("/result-entry")}>Result Entry</li>
-            <li onClick={handleLogoutClick}>Logout</li> {/* Add Logout option */}
+            <li onClick={handleReportClick}>Report</li>
+            <li onClick={handleSetLimitClick}>Set Limit</li>
+            <li onClick={handleWinningClick}>Winning</li>
+            <li>Delete Number</li>
+            <li>Profit and Loss</li>
+            <li>Result Entry</li>
+            <li onClick={handleLogoutClick}>Logout</li>
           </ul>
         </div>
       )}
