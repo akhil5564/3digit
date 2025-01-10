@@ -1,0 +1,65 @@
+/* header.css */
+
+/* Container for the calculator */
+.calc {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    position: fixed;  /* Fix the header to the top of the page */
+    top: 0;  /* Place the header at the top */
+    left: 0;  /* Ensure it's aligned with the left edge */
+    width: 100%;  /* Make the header full-width */
+    z-index: 1000;  /* Ensure it stays above other content */
+}
+
+h1 {
+    margin-left: 10px;
+}
+.icon2{
+    align-items: end;
+    margin-left: 9rem;
+    width: 3rem;
+    height: 3rem;
+}
+
+.icon {
+    cursor: pointer;
+    width: 2rem;
+    height: 3rem;
+}
+
+.dropdown {
+    position: absolute;
+    top: 50px;  /* Adjust based on where you want the dropdown */
+    left: 20px;
+    background-color: whitesmoke;
+    color: black;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    width: 20rem;
+    height: 100%;
+    z-index: 1500;
+}
+
+.dropdown ul {
+    list-style: none;
+    padding: 10px;
+    margin: 0;
+}
+
+.dropdown li {
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: whitesmoke;
+}
+
+.dropdown li:hover {
+    background-color: whitesmoke;
+}
+
+/* Add padding to the body or main content area to ensure the content doesn't get hidden behind the fixed header */
+body {
+    margin-top: 60px;  /* Adjust this based on the height of your header */
+}

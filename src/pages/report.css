@@ -1,0 +1,66 @@
+/* Container that holds the whole page */
+.page-container {
+    display: flex;
+    justify-content: flex-start;  /* Align content to the left */
+    align-items: flex-start;
+    padding: 20px;
+    background-color: #f4f7fb;  /* Light background for the page */
+    height: 100vh;  /* Full viewport height */
+  }
+  
+  /* Data container holding the table */
+  .data-container {
+    max-width: 500px;
+    width: 100%;
+    padding: 20px;
+    background-color: #fff;  /* White background for the content */
+    border-radius: 8px;  /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* Soft shadow for the container */
+  }
+  
+  /* Table styling */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;  /* Collapse table borders */
+    margin-top: 20px;
+  }
+  
+  /* Table headers styling */
+  .data-table th {
+    text-align: left;
+    padding: 10px;
+    background-color: #007bff;  /* Blue header */
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  
+  /* Table cells styling */
+  .data-table td {
+    padding: 10px;
+    text-align: left;
+    background-color: #f9f9f9;  /* Light grey for table rows */
+    border: 1px solid #ddd;  /* Border between cells */
+    font-size: 14px;
+  }
+  
+  /* Styling for the "No data found" message */
+  p {
+    font-size: 16px;
+    color: #888;
+  }
+  .clear-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #f44336;  /* Red color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .clear-button:hover {
+    background-color: #d32f2f;  /* Darker red on hover */
+  }
+  
+  
