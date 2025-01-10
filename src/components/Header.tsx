@@ -4,7 +4,7 @@ import './header.css';
 import { IconClipboardCopy } from '@tabler/icons-react';
 import { IconAlignJustified } from '@tabler/icons-react';
 
-interface HeaderProps {}
+interface HeaderProps { }
 
 const Header: FC<HeaderProps> = () => {
   // State to control the dropdown visibility
