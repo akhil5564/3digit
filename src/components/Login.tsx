@@ -1,7 +1,7 @@
 // src/components/Login.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";  // Import the useNavigate hook
-import './Login.css';
+import './login.css';
 
 const Login = () => {
   const [username, setUsername] = useState("");
