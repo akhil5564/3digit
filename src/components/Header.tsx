@@ -8,7 +8,7 @@ const Header: FC = () => {
   // State to control the dropdown visibility
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();  // Initialize navigate hook
-  const [calcResult, setCalcResult] = useState<string>("345=5"); // Example result to copy (can be dynamic)
+  const [calcResult] = useState<string>("345=5"); // Example result to copy (can be dynamic)
 
   // Function to toggle dropdown visibility
   const toggleDropdown = () => {
@@ -42,12 +42,11 @@ const Header: FC = () => {
       <div className='calc'>
         <div className='icon'>
           {/* Toggle dropdown */}
-          <IconAlignJustified stroke={4} onClick={toggleDropdown} />
+          <IconAlignJustified stroke={1} onClick={toggleDropdown} />
         </div>
-        <h1>Calculator</h1>
         <div className='icon2'>
           {/* Copy to clipboard */}
-          <IconClipboardCopy stroke={3} onClick={handleCopy} />
+          <IconClipboardCopy stroke={1} onClick={handleCopy} />
         </div>
       </div>
 

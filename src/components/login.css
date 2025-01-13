@@ -35,7 +35,7 @@
   h2 {
     font-size: 24px;
     margin-bottom: 20px;
-    color: #333;
+    color: #090202;
   }
   
   .textbox {
@@ -50,6 +50,7 @@
     border-radius: 4px;
     outline: none;
     transition: border-color 0.3s;
+    color: #090202;
   }
   
   .textbox input:focus {
@@ -78,3 +79,7 @@
     background-color: #0056b3;
   }
   
+  .placeholder-shown{
+    color: #090202;
+
+  }

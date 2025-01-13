@@ -45,7 +45,7 @@ input::placeholder {
 /* Button styling */
 button {
     color: white;
-    background-color: blue;
+    background-color:black;
     font-weight: 700;
     border-radius: 0.5rem;
     display: flex;
@@ -88,6 +88,9 @@ button:active {
         margin-top: 1.5rem;
         display: flex;
     }
+    .home{
+        margin-top: -23rem;
+    }
 
     button {
         width: 100%; /* Full width button on small screens */
@@ -128,4 +131,8 @@ button:active {
 
 .data-table tr:hover {
     background-color: #f1f1f1;
+}
+.btns{
+    display: flex;
+    gap: 1rem;
 }
