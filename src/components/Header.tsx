@@ -8,7 +8,7 @@ const Header: FC = () => {
   // State to control the dropdown visibility
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();  // Initialize navigate hook
-  const [calcResult] = useState<string>("345=5"); // Example result to copy (can be dynamic)
+  const [calcResult, setCalcResult] = useState<string>("345=5"); // Example result to copy (can be dynamic)
 
   // Function to toggle dropdown visibility
   const toggleDropdown = () => {
