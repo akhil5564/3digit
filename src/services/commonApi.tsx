@@ -1,6 +1,6 @@
 import axios from "axios"
 
-export const commonApi=async(method,url,data,headers)=>{
+export const commonApi=async(method: string,url: string,data: any,headers: any)=>{
     const reConfig={
         method:method,
         url:url,
@@ -9,7 +9,7 @@ export const commonApi=async(method,url,data,headers)=>{
     }
 
     try {
-       const resut=await axios
+       const resut=await axios(reConfig)
        return resut 
     } catch (error) {
         return error
