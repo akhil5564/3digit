@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import axios from 'axios';
 import { IconTrash } from '@tabler/icons-react';
-import './Report.css';  // Assuming you will create this CSS file for styling
+import './report.css';  // Assuming you will create this CSS file for styling
 
 interface ReportData {
   _id: string;
