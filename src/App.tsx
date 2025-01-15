@@ -3,6 +3,7 @@ import Login from './components/Login';  // Import Login component
 import Home from './components/Home';    // Import Home component
 import SetLimit from './pages/Setlimit';
 import Winning from './pages/Winning';
+import Reporter from './pages/Reporter';
 import Header from './components/Header'; // Import the Header component
 // ProtectedRoute component that checks if the user is logged in
 const ProtectedRoute = ({ element }: { element: React.ReactNode }) => {
@@ -20,32 +21,34 @@ const ProtectedRoute = ({ element }: { element: React.ReactNode }) => {
 function App() {
   return (
     <Router>
-      <Routes>
-        {/* Route for login page */}
-        <Route path="/" element={<Login />} />
+    <Routes>
+      {/* Route for login page */}
+      <Route path="/" element={<Login />} />
+      
+      {/* Corrected the misspelled "repoter" to "reporter" */}
+      <Route path="/reporter" element={<Reporter />} />
 
-        {/* Protected Routes */}
-        <Route 
-          path="/home" 
-          element={
-            <ProtectedRoute element={<><Header /><Home /></>} />
-          } 
-        />
-        
-        <Route 
-          path="/SetLimit" 
-          element={
-            <ProtectedRoute element={<><Header /><SetLimit /></>} />
-          } 
-        />
-        <Route 
-          path="/Winning" 
-          element={
-            <ProtectedRoute element={<><Header /><Winning /></>} />
-          } 
-        />
-      </Routes>
-    </Router>
+      {/* Protected Routes */}
+      <Route
+        path="/home"
+        element={
+          <ProtectedRoute element={<><Header /><Home /></>} />
+        }
+      />
+      <Route
+        path="/SetLimit"
+        element={
+          <ProtectedRoute element={<><Header /><SetLimit /></>} />
+        }
+      />
+      <Route
+        path="/Winning"
+        element={
+          <ProtectedRoute element={<><Header /><Winning /></>} />
+        }
+      />
+    </Routes>
+  </Router>
   );
 }
 

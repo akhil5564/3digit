@@ -16,7 +16,7 @@ const Header: FC = () => {
   };
 
   // Navigation functions
-  const handleReportClick = () => navigate("/report");
+  const handleReportClick = () => navigate('/reporter');
   const handleSetLimitClick = () => navigate("/set-limit");
   const handleWinningClick = () => navigate("/winning");
 
