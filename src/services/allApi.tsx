@@ -34,3 +34,7 @@ export const getData = async (): Promise<DataType[]> => {
         throw new Error('Error fetching data');
     }
 };
+export const getNumberCountFromDb = async (_number: string) => {
+    // Your logic to get count for a number from the database
+    // For example, returning an object like { count: '2' }
+};
