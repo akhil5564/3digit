@@ -3,11 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
-    "start": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
+ "scripts": {
+  "build": "react-scripts build", // For Create React App projects
+  "start": "react-scripts start",
+  "dev": "react-scripts start"
+},
+
   "dependencies": {
     "@tabler/core": "1.0.0-beta21",
     "@tabler/icons-react": "^3.28.1",
