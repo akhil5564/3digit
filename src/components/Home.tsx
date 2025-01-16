@@ -15,11 +15,10 @@ const Home: FC<HomeProps> = () => {
     const [firstInput, setFirstInput] = useState('');
     const [secondInput, setSecondInput] = useState('');
     const [radioValue, setRadioValue] = useState('super'); // Default radio button value
-    const [saveMessage, setSaveMessage] = useState('');
+    const [saveMessage, setSaveMessage] = useState(''); // Success message for saving
     const [dataList, setDataList] = useState<DataType[]>([]); // Type for the list of entered data
     const [isSaving, setIsSaving] = useState(false); // State to track saving status
-    const [errorMessage, setErrorMessage] = useState(''); // Error message for invalid data
-    const [blockMessage, setBlockMessage] = useState(''); // Message when number is blocked due to count == 5
+    const [exceededLimitNumbers, setExceededLimitNumbers] = useState<string[]>([]); // Store numbers with exceeded counts
 
     const secondInputRef = useRef<HTMLInputElement>(null); // Reference for the second input
 
@@ -44,8 +43,7 @@ const Home: FC<HomeProps> = () => {
                 const totalCount = existingCount + newCount;
 
                 if (totalCount > 5) {
-                    // If the sum exceeds 5, show a message and do not add
-                    setBlockMessage(`The total count for number ${firstInput} exceeds the allowed limit of 5. Total: ${totalCount}`);
+                    // If the sum exceeds 5, do not add and show a message
                     return;
                 }
 
@@ -64,26 +62,31 @@ const Home: FC<HomeProps> = () => {
             }
         } catch (error) {
             console.error('Error checking number count in the database:', error);
-            setErrorMessage('Error checking the number in the database.');
         }
 
         // Clear the input fields
         setFirstInput('');
         setSecondInput('');
         setRadioValue('super');
-        setBlockMessage(''); // Clear any previous block message
     };
 
     const handleSave = async () => {
         const totalCount = dataList.reduce((sum, data) => sum + Number(data.count), 0);
 
+        // Collect numbers with exceeded counts
+        const exceeded = dataList.filter(item => {
+            const count = Number(item.count);
+            const totalItemCount = count + (getNumberCountFromDb(item.number) || 0);
+            return totalItemCount > 5;
+        }).map(item => item.number);
+
+        // Update exceeded limit numbers
+        setExceededLimitNumbers(exceeded);
+
         // Check if the sum exceeds the allowed limit of 5
         if (totalCount > 5) {
-            // Get the number of the first input (or any specific number from the data)
-
-            // Set the error message with the number and total count
-            setErrorMessage(`The sum of counts exceeds the allowed limit of 5. Number: , Total: ${totalCount}`);
-            return; // Prevent saving if the sum exceeds the limit
+            // Prevent saving if the sum exceeds the limit
+            return;
         }
 
         // Disable the Save button while saving
@@ -93,13 +96,12 @@ const Home: FC<HomeProps> = () => {
             const result: any = await reportData(dataList); // Send data to backend
 
             if (result.status === 200) {
-                // Show success message
+                // Show success message and clear other messages
                 setSaveMessage('Data saved successfully!');
                 setDataList([]); // Clear dataList after saving
             } else if (result.response && result.response.status === 400) {
-                // If the server returns 400, display the error message (limit exceeded)
-                const limitErrorMessage = result.response.data.message || 'Error: The sum of counts exceeds the allowed limit of 5.';
-                setErrorMessage(limitErrorMessage);
+                // If the server returns 400, handle the error (limit exceeded)
+                setSaveMessage('Error: The sum of counts exceeds the allowed limit of 5.');
             }
         } catch (error) {
             console.log(error);
@@ -199,12 +201,20 @@ const Home: FC<HomeProps> = () => {
                 </div>
             </div>
 
-            {/* Display block message if count == 5 */}
-            {blockMessage && <p className="block-message" style={{ color: 'red' }}>{blockMessage}</p>}
-
-            {/* Display error or success message */}
+            {/* Display save message */}
             {saveMessage && <p className="save-message">{saveMessage}</p>}
-            {errorMessage && <p className="error-message" style={{ color: 'red' }}>{errorMessage}</p>}
+
+            {/* Display numbers that exceed the allowed limit of 5 */}
+            {exceededLimitNumbers.length > 0 && (
+                <div className="exceeded-limit-message">
+                    <p>The following numbers exceeded the allowed count limit of 5:</p>
+                    <ul>
+                        {exceededLimitNumbers.map((number, index) => (
+                            <li key={index}>{number}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
 
             {/* Table to display the added data */}
             {dataList.length > 0 && (

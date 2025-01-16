@@ -7,7 +7,7 @@ interface ReportData {
   _id: string;
   count: number;
   number: number;
-  createdAt: string;  // This is expected to be a timestamp string
+  createdAt: string;
   updatedAt: string;
   __v: number;
 }
@@ -44,7 +44,7 @@ const Report: FC = () => {
   const clearData = async () => {
     try {
       // Make a DELETE request to the backend to clear the data
-      const response = await axios.delete('https://threed-backend-1.onrender.com/addDataclearData');
+      const response = await axios.delete('https://threed-backend-1.onrender.com/clearData');
       console.log(response.data); // Log the response from backend (success message)
 
       // If the backend clears data successfully, clear it from the frontend
@@ -59,16 +59,15 @@ const Report: FC = () => {
   const deleteItem = async (id: string) => {
     try {
       console.log(`Deleting item with id: ${id}`); // Log the id being passed
-      const response = await axios.delete(`/${id}`);
+      const response = await axios.delete(`https://threed-backend-1.onrender.com/data/${id}`);
       console.log('Item deleted:', response.data);
-  
+
       setData((prevData) => prevData.filter(item => item._id !== id));
     } catch (err: any) {
       console.error('Error deleting item:', err);
       setError('Failed to delete item. Please try again later.');
     }
   };
-  
 
   // Function to format the createdAt timestamp to a readable format
   const formatDate = (dateString: string) => {
@@ -100,8 +99,8 @@ const Report: FC = () => {
           <tr>
             <th>Number</th>
             <th>Count</th>
-            <th>Created At</th> {/* Added new column for Created At */}
-            <th>Action</th> {/* Added column for the Delete button */}
+            <th>Created At</th> 
+            <th>Action</th> 
           </tr>
         </thead>
         <tbody>
@@ -109,13 +108,13 @@ const Report: FC = () => {
             <tr key={index}>
               <td>{item.number}</td>
               <td>{item.count}</td>
-              <td>{formatDate(item.createdAt)}</td> {/* Format the createdAt field */}
+              <td>{formatDate(item.createdAt)}</td> 
               <td>
                 <button
                   className="delete-button"
-                  onClick={() => deleteItem(item._id)} // Call delete function on button click
+                  onClick={() => deleteItem(item._id)} 
                 >
-               <IconTrash stroke={2} />
+                  <IconTrash stroke={2} />
                 </button>
               </td>
             </tr>

@@ -7,7 +7,7 @@ const Winning: FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>(''); // Error message for failed request
   const [loading, setLoading] = useState<boolean>(false); // Loading state to indicate request in progress
 
-  // Handle the input change
+  // Handle the input change (restrict to 3 digits)
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (value.length <= 3) {
@@ -21,23 +21,24 @@ const Winning: FC = () => {
       setLoading(true);
       setErrorMessage(''); // Clear previous errors
       try {
-        // Send the number to the backend to check if it exists
         const response = await axios.get(`https://threed-backend-1.onrender.com/checkNumber/${numberInput}`);
         
         if (response.data && response.data.number) {
-          setFoundData(response.data); // Set the found data if the number is found
+          setFoundData(response.data);
         } else {
-          setFoundData(null); // No matching data found
+          setFoundData(null);
         }
       } catch (error) {
-        setErrorMessage('Error fetching data. Please try again later.'); // Error handling
+        console.error('Error:', error); // Log the full error to see what is failing
+        setErrorMessage('Error fetching data. Please try again later.');
       } finally {
-        setLoading(false); // Set loading to false after the request is complete
+        setLoading(false);
       }
     } else {
       alert('Please enter a 3-digit number.');
     }
   };
+  
 
   return (
     <div>
