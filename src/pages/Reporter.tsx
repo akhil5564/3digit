@@ -21,7 +21,7 @@ const Report: FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/data');
+        const response = await axios.get('https://threed-backend-1.onrender.com/data');
         console.log('API Response:', response.data);
 
         if (Array.isArray(response.data)) {
@@ -44,7 +44,7 @@ const Report: FC = () => {
   const clearData = async () => {
     try {
       // Make a DELETE request to the backend to clear the data
-      const response = await axios.delete('http://localhost:5000/api/clearData');
+      const response = await axios.delete('https://threed-backend-1.onrender.com/addDataclearData');
       console.log(response.data); // Log the response from backend (success message)
 
       // If the backend clears data successfully, clear it from the frontend
@@ -58,17 +58,17 @@ const Report: FC = () => {
   // Function to delete a specific item
   const deleteItem = async (id: string) => {
     try {
-      // Make a DELETE request to the backend to delete the specific item by its id
-      const response = await axios.delete(`http://localhost:5000/api/data/${id}`);
+      console.log(`Deleting item with id: ${id}`); // Log the id being passed
+      const response = await axios.delete(`/${id}`);
       console.log('Item deleted:', response.data);
-
-      // If the backend successfully deletes the item, remove it from the frontend state
+  
       setData((prevData) => prevData.filter(item => item._id !== id));
     } catch (err: any) {
       console.error('Error deleting item:', err);
       setError('Failed to delete item. Please try again later.');
     }
   };
+  
 
   // Function to format the createdAt timestamp to a readable format
   const formatDate = (dateString: string) => {

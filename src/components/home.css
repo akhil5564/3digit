@@ -123,7 +123,7 @@ button:active {
 
 .data-table th, .data-table td {
     border: 1px solid #ccc;
-    padding: 8px;
+    padding: 5px;
     text-align: left;
 }
 

@@ -80,10 +80,9 @@ const Home: FC<HomeProps> = () => {
         // Check if the sum exceeds the allowed limit of 5
         if (totalCount > 5) {
             // Get the number of the first input (or any specific number from the data)
-            const firstNumber = dataList[0]?.number; // Assuming you want to show the first number in the list for error
 
             // Set the error message with the number and total count
-            setErrorMessage(`The sum of counts exceeds the allowed limit of 5. Number: ${firstNumber}, Total: ${totalCount}`);
+            setErrorMessage(`The sum of counts exceeds the allowed limit of 5. Number: , Total: ${totalCount}`);
             return; // Prevent saving if the sum exceeds the limit
         }
 

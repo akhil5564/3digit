@@ -22,7 +22,7 @@ const Winning: FC = () => {
       setErrorMessage(''); // Clear previous errors
       try {
         // Send the number to the backend to check if it exists
-        const response = await axios.get(`http://localhost:5000/api/checkNumber/${numberInput}`);
+        const response = await axios.get(`https://threed-backend-1.onrender.com/checkNumber/${numberInput}`);
         
         if (response.data && response.data.number) {
           setFoundData(response.data); // Set the found data if the number is found
