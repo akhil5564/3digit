@@ -19,6 +19,9 @@ const Report: FC = () => {
 
   // Fetch data from the backend when the component mounts
   useEffect(() => {
+    // Disable scrolling on body when the Report page is active
+    document.body.style.overflow = 'hidden';
+
     const fetchData = async () => {
       try {
         const response = await axios.get('https://threed-backend-uodx.onrender.com/data');
@@ -38,6 +41,11 @@ const Report: FC = () => {
     };
 
     fetchData();
+
+    // Cleanup: Re-enable scrolling when the component is unmounted
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
   }, []);
 
   // Function to clear all data both from the frontend and backend

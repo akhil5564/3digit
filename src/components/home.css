@@ -143,3 +143,11 @@ button:active {
     display: flex;
     gap: 1rem;
 }
+@media (max-width: 480px) {
+    html, body {
+        overflow: hidden;
+        height: 100%;
+    }
+}
+
+

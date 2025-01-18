@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import './home.css';
 import { IconTrash } from '@tabler/icons-react';
 import { reportData, getNumberCountFromDb } from '../services/allApi'; // Assuming getNumberCountFromDb is the API call to check the number in DB
@@ -21,6 +21,17 @@ const Home: FC<HomeProps> = () => {
 
     const secondInputRef = useRef<HTMLInputElement>(null); // Reference for the second input
     const firstInputRef = useRef<HTMLInputElement>(null); // Reference for the first input (number)
+
+    // Disable scrolling on mount and re-enable it on unmount
+    useEffect(() => {
+        // Disable scrolling when on the Home page
+        document.body.style.overflow = 'hidden';
+        
+        // Cleanup function to restore scrolling when component is unmounted
+        return () => {
+            document.body.style.overflow = 'auto';
+        };
+    }, []);
 
     // Handle Add button click
     const handleAdd = async () => {
@@ -103,7 +114,6 @@ const Home: FC<HomeProps> = () => {
             firstInputRef.current.focus(); // Focus on the number input field
         }
     };
-    
 
     // Handle Save button click
     const handleSave = async () => {

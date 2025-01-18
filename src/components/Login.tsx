@@ -1,13 +1,22 @@
-// src/components/Login.tsx
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";  // Import the useNavigate hook
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import './login.css';
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();  // Initialize the navigate function
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Disable scrolling on body when login page is rendered
+    document.body.style.overflow = "hidden";
+
+    // Clean up to enable scrolling again when the component is unmounted
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,8 +24,7 @@ const Login = () => {
     // Check if the username and password are correct
     if (username === "manu" && password === "123") {
       console.log("Login successful!");
-      // Store the login state in localStorage
-    sessionStorage.setItem("isLoggedIn", "true");
+      sessionStorage.setItem("isLoggedIn", "true");
       setError("");
       navigate("/home");  // Navigate to the Home page
     } else {
