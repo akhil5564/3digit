@@ -12,140 +12,149 @@ interface DataType {
 interface HomeProps { }
 
 const Home: FC<HomeProps> = () => {
-    const [firstInput, setFirstInput] = useState(''); // First input (number)
-    const [secondInput, setSecondInput] = useState(''); // Second input (count)
-    const [radioValue, setRadioValue] = useState('super'); // Default radio button value
-    const [saveMessage, setSaveMessage] = useState(''); // Success message for saving
-    const [dataList, setDataList] = useState<DataType[]>([]); // List of data
-    const [isSaving, setIsSaving] = useState(false); // State to track saving status
+    const [firstInput, setFirstInput] = useState(''); 
+    const [secondInput, setSecondInput] = useState('');
+    const [radioValue, setRadioValue] = useState('super'); 
+    const [saveMessage, setSaveMessage] = useState('');
+    const [dataList, setDataList] = useState<DataType[]>([]); 
+    const [isSaving, setIsSaving] = useState(false);
 
-    const secondInputRef = useRef<HTMLInputElement>(null); // Reference for the second input
-    const firstInputRef = useRef<HTMLInputElement>(null); // Reference for the first input (number)
+    const secondInputRef = useRef<HTMLInputElement>(null); 
+    const firstInputRef = useRef<HTMLInputElement>(null);
 
-    // Disable scrolling on mount and re-enable it on unmount
+    // UseEffect to load data from localStorage
     useEffect(() => {
+        // Retrieve the data from localStorage when the component mounts
+        const storedDataList = localStorage.getItem('dataList');
+        if (storedDataList) {
+            setDataList(JSON.parse(storedDataList));
+        }
+
+        // Retrieve other states from localStorage
+        const storedFirstInput = localStorage.getItem('firstInput');
+        if (storedFirstInput) {
+            setFirstInput(storedFirstInput);
+        }
+
+        const storedSecondInput = localStorage.getItem('secondInput');
+        if (storedSecondInput) {
+            setSecondInput(storedSecondInput);
+        }
+
+        const storedRadioValue = localStorage.getItem('radioValue');
+        if (storedRadioValue) {
+            setRadioValue(storedRadioValue);
+        }
+
         // Disable scrolling when on the Home page
         document.body.style.overflow = 'hidden';
-        
-        // Cleanup function to restore scrolling when component is unmounted
+
         return () => {
             document.body.style.overflow = 'auto';
         };
     }, []);
 
-    // Handle Add button click
+    // Save the state to localStorage whenever they change
+    useEffect(() => {
+        localStorage.setItem('dataList', JSON.stringify(dataList));
+        localStorage.setItem('firstInput', firstInput);
+        localStorage.setItem('secondInput', secondInput);
+        localStorage.setItem('radioValue', radioValue);
+    }, [dataList, firstInput, secondInput, radioValue]);
+
     const handleAdd = async () => {
-        // Check if all required inputs are valid
         if (firstInput.length !== 3 || secondInput.length === 0 || radioValue === '') {
             setSaveMessage("Please enter valid inputs.");
-            setTimeout(() => setSaveMessage(''), 3000);  // Clear message after 3 seconds
+            setTimeout(() => setSaveMessage(''), 3000); 
             return;
         }
-    
-        // Convert the second input to a number
+
         const newCount = Number(secondInput);
-    
+
         try {
-            // Check if the number exists in the database
-            const existingCountResponse = await getNumberCountFromDb(firstInput);  // Assume this is the API call
-    
+            const existingCountResponse = await getNumberCountFromDb(firstInput);
+
             if (existingCountResponse && existingCountResponse.status === 200) {
                 const { count, number } = existingCountResponse.data;
-    
-                // Calculate the total count after adding the new count
                 const totalCount = Number(count) + newCount;
                 const balance = 5 - totalCount + newCount;
 
-                // Check if the total count exceeds the limit (e.g., 5)
                 if (totalCount > 5) {
                     setSaveMessage(`Blocked: ${number} (${balance})`);
-                    setTimeout(() => setSaveMessage(''), 3000);  // Clear message after 3 seconds
+                    setTimeout(() => setSaveMessage(''), 3000);  
                     return;
                 }
-    
-                // Update the data list
+
                 const updatedDataList = dataList.map(item => {
                     if (item.number === firstInput) {
-                        return { ...item, count: (Number(item.count) + newCount).toString() }; // Update the count for the existing number
+                        return { ...item, count: (Number(item.count) + newCount).toString() };
                     }
                     return item;
                 });
-    
-                setDataList(updatedDataList); // Update the dataList state
-    
-                // If no existing data, create a new entry for the table
+
+                setDataList(updatedDataList);
+
                 if (!updatedDataList.some(item => item.number === firstInput)) {
                     const newData: DataType = {
                         number: firstInput,
                         count: secondInput,
                         type: radioValue,
                     };
-                    setDataList([...dataList, newData]); // Add the new entry to the data list
+                    setDataList([...dataList, newData]);
                 }
             } else {
-                // Handle case where number doesn't exist in DB
                 setSaveMessage(existingCountResponse.data.message);
-                setTimeout(() => setSaveMessage(''), 3000);  // Clear message after 3 seconds
-    
-                // If no existing data, create a new entry for the table
+                setTimeout(() => setSaveMessage(''), 3000);
+
                 const newData: DataType = {
                     number: firstInput,
                     count: secondInput,
                     type: radioValue,
                 };
-                setDataList([...dataList, newData]); // Add the new entry to the data list
-    
-                setSaveMessage(``);
-                setTimeout(() => setSaveMessage(''), 3000);  // Clear message after 3 seconds
+                setDataList([...dataList, newData]);
+
+                setSaveMessage('');
+                setTimeout(() => setSaveMessage(''), 3000);
             }
         } catch (error) {
             console.error('Error checking number count in the database:', error);
             setSaveMessage('Error: Count not fetched from the database.');
-            setTimeout(() => setSaveMessage(''), 3000);  // Clear message after 3 seconds
+            setTimeout(() => setSaveMessage(''), 3000);
         }
-    
-        // Clear the input fields after adding
+
         setFirstInput('');
         setSecondInput('');
         setRadioValue('super');
-    
-        // Focus back on the number input after Add button click
+
         if (firstInputRef.current) {
-            firstInputRef.current.focus(); // Focus on the number input field
+            firstInputRef.current.focus();
         }
     };
 
-    // Handle Save button click
     const handleSave = async () => {
         const totalCount = dataList.reduce((sum, data) => sum + Number(data.count), 0);
 
-        // Check if the sum exceeds the allowed limit of 5
         if (totalCount > 100) {
-            // Prevent saving if the sum exceeds the limit
             setSaveMessage('Error: The sum of counts exceeds the allowed limit of 5.');
-            setTimeout(() => setSaveMessage(''), 3000);  // Clear message after 3 seconds
+            setTimeout(() => setSaveMessage(''), 3000); 
             return;
         }
 
-        // Disable the Save button while saving
         setIsSaving(true);
 
         try {
-            const result: any = await reportData(dataList); // Send data to backend
+            const result: any = await reportData(dataList);
 
             if (result.status === 200) {
-                // Show success message and clear other messages
                 setSaveMessage('Data saved successfully!');
-                setDataList([]); // Clear dataList after saving
+                setDataList([]);
             } else if (result.status === 400) {
-                // If the server returns 400, handle the error (limit exceeded)
                 setSaveMessage('Error: The sum of counts exceeds the allowed limit of 5.');
             }
         } catch (error) {
             console.log(error);
             setSaveMessage('Error saving data');
         } finally {
-            // Reset state and show message for 3 seconds
             setFirstInput('');
             setSecondInput('');
             setRadioValue('super');
@@ -157,7 +166,6 @@ const Home: FC<HomeProps> = () => {
         }
     };
 
-    // Handle first input change (max length 3 digits)
     const handleFirstInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
 
@@ -170,20 +178,16 @@ const Home: FC<HomeProps> = () => {
         }
     };
 
-    // Handle second input change
     const handleSecondInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setSecondInput(value);
     };
 
-    // Handle radio button change
     const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setRadioValue(e.target.value);
     };
 
-    // Handle delete item
     const handleDelete = (number: string) => {
-        // Filter out the item with the specified number
         const updatedDataList = dataList.filter(item => item.number !== number);
         setDataList(updatedDataList);
     };
@@ -197,7 +201,7 @@ const Home: FC<HomeProps> = () => {
                     value={firstInput}
                     maxLength={3}
                     onChange={handleFirstInputChange}
-                    ref={firstInputRef} // Attach ref to the number input
+                    ref={firstInputRef}
                 />
                 <input
                     type="number"
@@ -240,10 +244,8 @@ const Home: FC<HomeProps> = () => {
                 </div>
             </div>
 
-            {/* Display save message */}
             {saveMessage && <p className="save-message">{saveMessage}</p>}
 
-            {/* Table to display the added data */}
             {dataList.length > 0 && (
                 <table className="data-table">
                     <thead>
@@ -251,7 +253,7 @@ const Home: FC<HomeProps> = () => {
                             <th>Number</th>
                             <th>Count</th>
                             <th>Type</th>
-                            <th>Action</th> {/* Added column for delete action */}
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -261,8 +263,10 @@ const Home: FC<HomeProps> = () => {
                                 <td>{data.count}</td>
                                 <td>{data.type}</td>
                                 <td>
-                                    <button className='delete' onClick={() => handleDelete(data.number)}><IconTrash stroke={2} /></button>
-                                </td> {/* Delete button */}
+                                    <button className='delete' onClick={() => handleDelete(data.number)}>
+                                        <IconTrash stroke={2} />
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
