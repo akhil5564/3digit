@@ -35,6 +35,12 @@ export const getData = async (): Promise<DataType[]> => {
     }
 };
 export const getNumberCountFromDb = async (_number: string) => {
-    // Your logic to get count for a number from the database
-    // For example, returning an object like { count: '2' }
+    const data = {number:_number}
+    try {
+        const response = await commonApi('POST', `${basUrl}/getCountData`, data, '');
+        return response;  // Return the response data from the API
+    } catch (error) {
+        console.error('Error reporting data:', error);
+        throw new Error('Error reporting data. Please try again later.');
+    }
 };

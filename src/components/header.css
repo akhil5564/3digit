@@ -2,6 +2,7 @@
 
 /* Container for the calculator */
 .calc {
+    align-items: center;
     display: flex;
     align-items: center;
     padding: 10px;
@@ -19,7 +20,7 @@ h1 {
 }
 .icon2{
     align-items: end;
-    margin-left: 9rem;
+    margin-left: 19rem;
     width: 1rem;
     height: 1rem;
 }

@@ -21,7 +21,7 @@ const Report: FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://threed-backend-1.onrender.com/data');
+        const response = await axios.get('https://threed-backend-uodx.onrender.com/data');
         console.log('API Response:', response.data);
 
         if (Array.isArray(response.data)) {
@@ -29,10 +29,10 @@ const Report: FC = () => {
         } else {
           setError('The received data format is invalid. Expected an array.');
         }
-        setLoading(false);
       } catch (err: any) {
         console.error('Error fetching data:', err);
         setError('Failed to fetch data. Please try again later.');
+      } finally {
         setLoading(false);
       }
     };
@@ -43,12 +43,10 @@ const Report: FC = () => {
   // Function to clear all data both from the frontend and backend
   const clearData = async () => {
     try {
-      // Make a DELETE request to the backend to clear the data
-      const response = await axios.delete('https://threed-backend-1.onrender.com/clearData');
+      const response = await axios.delete('https://threed-backend-uodx.onrender.com/clearData');
       console.log(response.data); // Log the response from backend (success message)
 
-      // If the backend clears data successfully, clear it from the frontend
-      setData([]);
+      setData([]); // Clear frontend data
     } catch (err: any) {
       console.error('Error clearing data:', err);
       setError('Failed to clear data. Please try again later.');
@@ -59,10 +57,10 @@ const Report: FC = () => {
   const deleteItem = async (id: string) => {
     try {
       console.log(`Deleting item with id: ${id}`); // Log the id being passed
-      const response = await axios.delete(`https://threed-backend-1.onrender.com/data/${id}`);
+      const response = await axios.delete(`https://threed-backend-uodx.onrender.com/data/${id}`);
       console.log('Item deleted:', response.data);
 
-      setData((prevData) => prevData.filter(item => item._id !== id));
+      setData((prevData) => prevData.filter((item) => item._id !== id)); // Update state
     } catch (err: any) {
       console.error('Error deleting item:', err);
       setError('Failed to delete item. Please try again later.');
@@ -92,27 +90,32 @@ const Report: FC = () => {
 
   return (
     <div className="report-container">
-      <h1>Report</h1>
-      <button className="clear-button" onClick={clearData}>Clear All</button>
+      <div className="fix">
+        <h1>Report</h1>
+        <button className="clear-button" onClick={clearData}>
+          Clear All
+        </button>
+      </div>
       <table className="report-table">
         <thead>
           <tr>
             <th>Number</th>
             <th>Count</th>
-            <th>Created At</th> 
-            <th>Action</th> 
+            <th>Created At</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {data.map((item, index) => (
-            <tr key={index}>
-              <td>{item.number}</td>
+          {data.map((item) => (
+            <tr key={item._id}>
+              <td>{String(item.number).padStart(3, '0')}</td> {/* Ensure 3 digits for number */}
               <td>{item.count}</td>
-              <td>{formatDate(item.createdAt)}</td> 
+              <td>{formatDate(item.createdAt)}</td>
               <td>
                 <button
                   className="delete-button"
-                  onClick={() => deleteItem(item._id)} 
+                  onClick={() => deleteItem(item._id)}
+                  aria-label={`Delete item ${item.number}`} // Accessibility
                 >
                   <IconTrash stroke={2} />
                 </button>

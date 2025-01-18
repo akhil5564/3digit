@@ -12,80 +12,108 @@ interface DataType {
 interface HomeProps { }
 
 const Home: FC<HomeProps> = () => {
-    const [firstInput, setFirstInput] = useState('');
-    const [secondInput, setSecondInput] = useState('');
+    const [firstInput, setFirstInput] = useState(''); // First input (number)
+    const [secondInput, setSecondInput] = useState(''); // Second input (count)
     const [radioValue, setRadioValue] = useState('super'); // Default radio button value
     const [saveMessage, setSaveMessage] = useState(''); // Success message for saving
-    const [dataList, setDataList] = useState<DataType[]>([]); // Type for the list of entered data
+    const [dataList, setDataList] = useState<DataType[]>([]); // List of data
     const [isSaving, setIsSaving] = useState(false); // State to track saving status
-    const [exceededLimitNumbers, setExceededLimitNumbers] = useState<string[]>([]); // Store numbers with exceeded counts
 
     const secondInputRef = useRef<HTMLInputElement>(null); // Reference for the second input
+    const firstInputRef = useRef<HTMLInputElement>(null); // Reference for the first input (number)
 
     // Handle Add button click
     const handleAdd = async () => {
         // Check if all required inputs are valid
         if (firstInput.length !== 3 || secondInput.length === 0 || radioValue === '') {
-            alert("Please enter valid inputs.");
+            setSaveMessage("Please enter valid inputs.");
+            setTimeout(() => setSaveMessage(''), 3000);  // Clear message after 3 seconds
             return;
         }
-
-        // Convert the second input to number
+    
+        // Convert the second input to a number
         const newCount = Number(secondInput);
-
+    
         try {
             // Check if the number exists in the database
-            const existingCountResponse = await getNumberCountFromDb(firstInput);  // Assume this returns the current count of the number
+            const existingCountResponse = await getNumberCountFromDb(firstInput);  // Assume this is the API call
+    
+            if (existingCountResponse && existingCountResponse.status === 200) {
+                const { count, number } = existingCountResponse.data;
+    
+                // Calculate the total count after adding the new count
+                const totalCount = Number(count) + newCount;
+                const balance = 5 - totalCount + newCount;
 
-            if (-existingCountResponse) {
-                const existingCount = Number(existingCountResponse); // Ensure `existingCountResponse.count` is a valid number
-
-                const totalCount = existingCount + newCount;
-
+                // Check if the total count exceeds the limit (e.g., 5)
                 if (totalCount > 5) {
-                    // If the sum exceeds 5, do not add and show a message
+                    setSaveMessage(`Blocked: ${number} (${balance})`);
+                    setTimeout(() => setSaveMessage(''), 3000);  // Clear message after 3 seconds
                     return;
                 }
-
-                // If it doesn't exceed, proceed to add the new count to the existing number
+    
+                // Update the data list
                 const updatedDataList = dataList.map(item => {
                     if (item.number === firstInput) {
-                        return { ...item, count: (existingCount + newCount).toString() }; // Update the count for the existing number
+                        return { ...item, count: (Number(item.count) + newCount).toString() }; // Update the count for the existing number
                     }
                     return item;
                 });
-                setDataList(updatedDataList);
+    
+                setDataList(updatedDataList); // Update the dataList state
+    
+                // If no existing data, create a new entry for the table
+                if (!updatedDataList.some(item => item.number === firstInput)) {
+                    const newData: DataType = {
+                        number: firstInput,
+                        count: secondInput,
+                        type: radioValue,
+                    };
+                    setDataList([...dataList, newData]); // Add the new entry to the data list
+                }
             } else {
-                // If the number doesn't exist in the database, add the new number
-                const newData = { number: firstInput, count: secondInput, type: radioValue };
-                setDataList(prevDataList => [...prevDataList, newData]);
+                // Handle case where number doesn't exist in DB
+                setSaveMessage(existingCountResponse.data.message);
+                setTimeout(() => setSaveMessage(''), 3000);  // Clear message after 3 seconds
+    
+                // If no existing data, create a new entry for the table
+                const newData: DataType = {
+                    number: firstInput,
+                    count: secondInput,
+                    type: radioValue,
+                };
+                setDataList([...dataList, newData]); // Add the new entry to the data list
+    
+                setSaveMessage(``);
+                setTimeout(() => setSaveMessage(''), 3000);  // Clear message after 3 seconds
             }
         } catch (error) {
             console.error('Error checking number count in the database:', error);
+            setSaveMessage('Error: Count not fetched from the database.');
+            setTimeout(() => setSaveMessage(''), 3000);  // Clear message after 3 seconds
         }
-
-        // Clear the input fields
+    
+        // Clear the input fields after adding
         setFirstInput('');
         setSecondInput('');
         setRadioValue('super');
+    
+        // Focus back on the number input after Add button click
+        if (firstInputRef.current) {
+            firstInputRef.current.focus(); // Focus on the number input field
+        }
     };
+    
 
+    // Handle Save button click
     const handleSave = async () => {
         const totalCount = dataList.reduce((sum, data) => sum + Number(data.count), 0);
 
-        // Collect numbers with exceeded counts
-        const exceeded = dataList.filter(item => {
-            const count = Number(item.count);
-            const totalItemCount = count + (getNumberCountFromDb(item.number) || 0);
-            return totalItemCount > 5;
-        }).map(item => item.number);
-
-        // Update exceeded limit numbers
-        setExceededLimitNumbers(exceeded);
-
         // Check if the sum exceeds the allowed limit of 5
-        if (totalCount > 5) {
+        if (totalCount > 100) {
             // Prevent saving if the sum exceeds the limit
+            setSaveMessage('Error: The sum of counts exceeds the allowed limit of 5.');
+            setTimeout(() => setSaveMessage(''), 3000);  // Clear message after 3 seconds
             return;
         }
 
@@ -99,7 +127,7 @@ const Home: FC<HomeProps> = () => {
                 // Show success message and clear other messages
                 setSaveMessage('Data saved successfully!');
                 setDataList([]); // Clear dataList after saving
-            } else if (result.response && result.response.status === 400) {
+            } else if (result.status === 400) {
                 // If the server returns 400, handle the error (limit exceeded)
                 setSaveMessage('Error: The sum of counts exceeds the allowed limit of 5.');
             }
@@ -159,6 +187,7 @@ const Home: FC<HomeProps> = () => {
                     value={firstInput}
                     maxLength={3}
                     onChange={handleFirstInputChange}
+                    ref={firstInputRef} // Attach ref to the number input
                 />
                 <input
                     type="number"
@@ -203,18 +232,6 @@ const Home: FC<HomeProps> = () => {
 
             {/* Display save message */}
             {saveMessage && <p className="save-message">{saveMessage}</p>}
-
-            {/* Display numbers that exceed the allowed limit of 5 */}
-            {exceededLimitNumbers.length > 0 && (
-                <div className="exceeded-limit-message">
-                    <p>The following numbers exceeded the allowed count limit of 5:</p>
-                    <ul>
-                        {exceededLimitNumbers.map((number, index) => (
-                            <li key={index}>{number}</li>
-                        ))}
-                    </ul>
-                </div>
-            )}
 
             {/* Table to display the added data */}
             {dataList.length > 0 && (
