@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';  // Import useNavigate from reac
 import './header.css';  // Your CSS file for styling
 import { IconClipboardCopy } from '@tabler/icons-react';  // Importing icons from Tabler Icons
 import { IconAlignJustified } from '@tabler/icons-react';
+import logo from '../assets/th-removebg-preview (1).png'
 
 const Header: FC = () => {
   // State to control the dropdown visibility
@@ -39,11 +40,14 @@ const Header: FC = () => {
 
   return (
     <>
+
       <div className='calc'>
         <div className='icon'>
           {/* Toggle dropdown */}
           <IconAlignJustified stroke={1} onClick={toggleDropdown} />
         </div>
+        <img className='logo' src={logo} alt="Logo" />
+
         <div className='icon2'>
           {/* Copy to clipboard */}
           <IconClipboardCopy stroke={1} onClick={handleCopy} />
