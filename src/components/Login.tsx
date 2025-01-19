@@ -6,30 +6,48 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);  // Add loading state
   const navigate = useNavigate();
 
   useEffect(() => {
     // Disable scrolling on body when login page is rendered
     document.body.style.overflow = "hidden";
 
+    // Check if user is already logged in
+    if (sessionStorage.getItem("isLoggedIn") === "true") {
+      navigate("/home");  // Redirect to Home page if already logged in
+    }
+
     // Clean up to enable scrolling again when the component is unmounted
     return () => {
       document.body.style.overflow = "auto";
     };
-  }, []);
+  }, [navigate]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Check if the username and password are correct
-    if (username === "manu" && password === "123") {
-      console.log("Login successful!");
-      sessionStorage.setItem("isLoggedIn", "true");
-      setError("");
-      navigate("/home");  // Navigate to the Home page
-    } else {
-      setError("Invalid username or password.");
+    // Simple form validation
+    if (!username || !password) {
+      setError("Both username and password are required.");
+      return;
     }
+
+    setError("");  // Clear any previous error message
+    setIsLoading(true);  // Show loading indicator
+
+    // Simulate a network request for login (replace with actual API in real-world app)
+    setTimeout(() => {
+      if (username === "manu" && password === "123") {
+        console.log("Login successful!");
+        sessionStorage.setItem("isLoggedIn", "true");
+        setIsLoading(false);
+        navigate("/home");  // Navigate to the Home page
+      } else {
+        setIsLoading(false);
+        setError("Invalid username or password.");
+      }
+    }, 1000); // Simulating network delay (1 second)
   };
 
   return (
@@ -40,6 +58,7 @@ const Login = () => {
           <div className="textbox">
             <input
               type="text"
+              id="username"
               placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -49,6 +68,7 @@ const Login = () => {
           <div className="textbox">
             <input
               type="password"
+              id="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -56,11 +76,13 @@ const Login = () => {
             />
           </div>
           {error && <div className="error-message">{error}</div>}
-          <button type="submit" className="btn">Login</button>
+          <button type="submit" className="btn" disabled={isLoading}>
+            {isLoading ? "Logging in..." : "Login"}
+          </button>
         </form>
       </div>
     </div>
-  )
+  );
 };
 
 export default Login;
