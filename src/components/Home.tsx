@@ -256,20 +256,21 @@ const Home: FC<HomeProps> = () => {
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {dataList.map((data, index) => (
-                            <tr key={index}>
-                                <td>{data.number}</td>
-                                <td>{data.count}</td>
-                                <td>{data.type}</td>
-                                <td>
-                                    <button className='delete' onClick={() => handleDelete(data.number)}>
-                                        <IconTrash stroke={2} />
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
+                  
+                     <tbody>
+                         {dataList.map((data, index) => (
+                             <tr key={index}>
+                                 <td>{data.number}</td>
+                                 <td>{data.count}</td>
+                                 <td>{data.type}</td>
+                                 <td>
+                                     <button className='delete' onClick={() => handleDelete(data.number)}>
+                                         <IconTrash stroke={2} />
+                                     </button>
+                                 </td>
+                             </tr>
+                         ))}
+                     </tbody>
                 </table>
             )}
         </div>

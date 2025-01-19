@@ -99,7 +99,6 @@ const Report: FC = () => {
   return (
     <div className="report-container">
       <div className="fix">
-        <h1>Report</h1>
         <button className="clear-button" onClick={clearData}>
           Clear All
         </button>

@@ -1,90 +1,86 @@
-/* Styles for the report container */
 .report-container {
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  margin: 0 auto;
-  max-width: 800px;
-  position: relative;
+  width: 100%;
+  max-width: 800px; /* You can adjust the max-width */
+  margin: 0 ;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  border-radius: 8px;
 }
 
-/* Header styling */
-.header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  background-color: white;
-  z-index: 2;
-  padding: 10px 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px; /* Added margin to create a gap between header and table */
-}
-
-/* Button styling */
-.clear-button {
-  background-color: #0e0e0e;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1em;
-  transition: background-color 0.3s ease;
-}
-
-.clear-button:hover {
-  background-color: #050303;
-}
-
-/* Table styling */
 .report-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px; /* Adds margin on top of the table */
+  table-layout: fixed;
 }
+
 
 .report-table th,
 .report-table td {
-  padding: 12px 15px;
+  padding: 10px;
   text-align: left;
-  border: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
 }
 
-.report-table th {
-  background-color: #0a0b0a;
+.fix {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.clear-button {
+  padding: 8px 16px;
+  background-color: #040404;
   color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
-.report-table tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-/* Table body scroll */
-.table-body {
-  display: block;
-  max-height: 400px; /* Set a max height to allow scrolling */
-  overflow-y: auto; /* Enable vertical scrolling */
-}
-
-/* Styling for loading and no data messages */
-.loading,
-.no-data,
-.error-message {
-  text-align: center;
-  font-size: 1.2em;
-  margin-top: 50px;
+.clear-button:hover {
+  background-color: #0b0a0a;
 }
 
 .delete-button {
-  background-color: transparent;
-  color: black;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #080808;
 }
 
-.error-message {
-  color: red;
+.delete-button:hover {
+  color: #141212;
 }
 
+.loading,
+.error-message,
 .no-data {
-  color: gray;
+  text-align: center;
+  font-size: 1.2em;
 }
+
+/* Scrollable tbody */
+.report-table tbody {
+  display: block;
+  max-height: 400px; /* Adjust the height as per your requirement */
+  overflow-y: auto;
+}
+
+.report-table thead {
+  display: table;
+  width: 100%;
+}
+
+.report-table tbody td,
+.report-table thead th {
+  width: 25%; /* Adjust the width of the columns */
+}
+.report-table thead th{
+  background-color: black;
+  color: white;
+}
+.tbody{
+overflow-y: auto;
+
+}
+
