@@ -1,70 +1,67 @@
 import { FC, useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // Import useNavigate from react-router-dom
-import './header.css';  // Your CSS file for styling
-import { IconClipboardCopy } from '@tabler/icons-react';  // Importing icons from Tabler Icons
+import { useNavigate } from 'react-router-dom';  
+import './header.css';  
+import { IconClipboardCopy } from '@tabler/icons-react';  
 import { IconAlignJustified } from '@tabler/icons-react';
 import logo from '../assets/th-removebg-preview (1).png'
 
-const Header: FC = () => {
-  // State to control the dropdown visibility
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const navigate = useNavigate();  // Initialize navigate hook
-  const [calcResult] = useState<string>("345=5"); // Example result to copy (can be dynamic)
+interface HeaderProps {
+  setPastedData: React.Dispatch<React.SetStateAction<{ number: string, count: string } | null>>;
+}
 
-  // Function to toggle dropdown visibility
+const Header: FC<HeaderProps> = ({ setPastedData }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate();  
+  const [calcResult] = useState<string>("345=5");
+
   const toggleDropdown = () => {
     setIsDropdownOpen(prevState => !prevState);
   };
 
-  // Navigation functions
-  const handleReportClick = () => navigate('/reporter');
-  const handleSetLimitClick = () => navigate("/set-limit");
-  const handleWinningClick = () => navigate("/winning");
+  const handleClipboard = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      const regex = /^(\d{3})=(\d{1})$/;
 
-  // Function to handle logout
-  const handleLogoutClick = () => {
-    // Clear the login-related data (if any)
-    localStorage.removeItem("isLoggedIn");  // Or sessionStorage.removeItem('isLoggedIn');
-    // Navigate back to the login page
-    navigate("/");  // Navigate to the login page
-  };
+      const match = text.match(regex);
 
-  // Function to copy the content to clipboard
-  const handleCopy = () => {
-    navigator.clipboard.writeText(calcResult).then(() => {
-      alert('Data copied to clipboard!');
-    }).catch(err => {
-      console.error('Failed to copy text: ', err);
-    });
+      if (match) {
+        const number = match[1];
+        const count = match[2];
+
+        // Pass the pasted data back to the parent (App)
+        setPastedData({ number, count });
+
+        alert(`Data saved: Number = ${number}, Count = ${count}`);
+      } else {
+        alert('Invalid format. Please use the format: "123=5"');
+      }
+    } catch (err) {
+      console.error('Failed to read clipboard content: ', err);
+      alert('Failed to read clipboard content');
+    }
   };
 
   return (
     <>
-
       <div className='calc'>
         <div className='icon'>
-          {/* Toggle dropdown */}
           <IconAlignJustified stroke={1} onClick={toggleDropdown} />
         </div>
         <img className='logo' src={logo} alt="Logo" />
 
         <div className='icon2'>
-          {/* Copy to clipboard */}
-          <IconClipboardCopy stroke={1} onClick={handleCopy} />
+          <IconClipboardCopy stroke={1} onClick={handleClipboard} />
         </div>
       </div>
 
-      {/* Dropdown Menu */}
       {isDropdownOpen && (
         <div className='dropdown'>
           <ul>
-            <li onClick={handleReportClick}>Report</li>
-            <li onClick={handleSetLimitClick}>Set Limit</li>
-            <li onClick={handleWinningClick}>Winning</li>
-            <li>Delete Number</li>
-            <li>Profit and Loss</li>
-            <li>Result Entry</li>
-            <li onClick={handleLogoutClick}>Logout</li>
+            <li onClick={() => navigate('/reporter')}>Report</li>
+            <li onClick={() => navigate("/set-limit")}>Set Limit</li>
+            <li onClick={() => navigate("/winning")}>Winning</li>
+            <li onClick={() => ("isLoggedIn") && navigate("/")}>Logout</li>
           </ul>
         </div>
       )}

@@ -18,6 +18,7 @@ const Home: FC<HomeProps> = () => {
     const [saveMessage, setSaveMessage] = useState('');
     const [dataList, setDataList] = useState<DataType[]>([]);
     const [isSaving, setIsSaving] = useState(false);
+    const [pastedData, setPastedData] = useState<DataType | null>(null); // Added state for pasted data
 
     const secondInputRef = useRef<HTMLInputElement>(null);
     const firstInputRef = useRef<HTMLInputElement>(null);
@@ -199,6 +200,42 @@ const Home: FC<HomeProps> = () => {
         setDataList(updatedDataList);
     };
 
+    // Handle pasting data (clipboard functionality)
+    const handlePaste = async () => {
+        try {
+            // Check if the clipboard API is available in the browser
+            if (!navigator.clipboard) {
+                alert('Clipboard API is not available in this browser.');
+                return;
+            }
+    
+            const text = await navigator.clipboard.readText();
+            console.log('Pasted text:', text); // Debugging log to see what is being pasted
+    
+            const regex = /^(\d{3})=(\d{1})$/; // Validates "123=5" format
+            const match = text.match(regex);
+    
+            if (match) {
+                const newData: DataType = {
+                    number: match[1],
+                    count: match[2],
+                    type: radioValue, // Default to 'super' as per the current state
+                };
+    
+                // If you want to show the pasted data both separately and inside the main list:
+                setPastedData(newData);  // Store pasted data separately
+                setDataList((prevDataList) => [...prevDataList, newData]); // Add it to dataList as well
+                alert('Pasted data added successfully!');
+            } else {
+                alert('Invalid format! Please use the format "123=5".');
+            }
+        } catch (error) {
+            console.error('Error pasting data:', error);
+            alert('Failed to read clipboard content');
+        }
+    };
+    
+
     return (
         <div className='home'>
             <div className='inputs'>
@@ -266,6 +303,21 @@ const Home: FC<HomeProps> = () => {
                         </thead>
 
                         <tbody>
+                            {/* Display pasted data first, if exists */}
+                            {pastedData && (
+                                <tr key="pasted-data">
+                                    <td>{pastedData.number}</td>
+                                    <td>{pastedData.count}</td>
+                                    <td>{pastedData.type}</td>
+                                    <td>
+                                        <button className='delete' onClick={() => handleDelete(pastedData.number)}>
+                                            <IconTrash stroke={2} />
+                                        </button>
+                                    </td>
+                                </tr>
+                            )}
+
+                            {/* Display all items in dataList */}
                             {dataList.map((data, index) => (
                                 <tr key={index}>
                                     <td>{data.number}</td>
