@@ -12,25 +12,23 @@ interface DataType {
 interface HomeProps { }
 
 const Home: FC<HomeProps> = () => {
-    const [firstInput, setFirstInput] = useState(''); 
+    const [firstInput, setFirstInput] = useState('');
     const [secondInput, setSecondInput] = useState('');
-    const [radioValue, setRadioValue] = useState('super'); 
+    const [radioValue, setRadioValue] = useState('super');
     const [saveMessage, setSaveMessage] = useState('');
-    const [dataList, setDataList] = useState<DataType[]>([]); 
+    const [dataList, setDataList] = useState<DataType[]>([]);
     const [isSaving, setIsSaving] = useState(false);
 
-    const secondInputRef = useRef<HTMLInputElement>(null); 
+    const secondInputRef = useRef<HTMLInputElement>(null);
     const firstInputRef = useRef<HTMLInputElement>(null);
 
-    // UseEffect to load data from localStorage
     useEffect(() => {
-        // Retrieve the data from localStorage when the component mounts
+        // Retrieve data from localStorage when the component mounts
         const storedDataList = localStorage.getItem('dataList');
         if (storedDataList) {
             setDataList(JSON.parse(storedDataList));
         }
 
-        // Retrieve other states from localStorage
         const storedFirstInput = localStorage.getItem('firstInput');
         if (storedFirstInput) {
             setFirstInput(storedFirstInput);
@@ -54,7 +52,6 @@ const Home: FC<HomeProps> = () => {
         };
     }, []);
 
-    // Save the state to localStorage whenever they change
     useEffect(() => {
         localStorage.setItem('dataList', JSON.stringify(dataList));
         localStorage.setItem('firstInput', firstInput);
@@ -65,7 +62,7 @@ const Home: FC<HomeProps> = () => {
     const handleAdd = async () => {
         if (firstInput.length !== 3 || secondInput.length === 0 || radioValue === '') {
             setSaveMessage("Please enter valid inputs.");
-            setTimeout(() => setSaveMessage(''), 3000); 
+            setTimeout(() => setSaveMessage(''), 3000);
             return;
         }
 
@@ -81,7 +78,7 @@ const Home: FC<HomeProps> = () => {
 
                 if (totalCount > 5) {
                     setSaveMessage(`Blocked: ${number} (${balance})`);
-                    setTimeout(() => setSaveMessage(''), 3000);  
+                    setTimeout(() => setSaveMessage(''), 3000);
                     return;
                 }
 
@@ -136,7 +133,7 @@ const Home: FC<HomeProps> = () => {
 
         if (totalCount > 100) {
             setSaveMessage('Error: The sum of counts exceeds the allowed limit of 5.');
-            setTimeout(() => setSaveMessage(''), 3000); 
+            setTimeout(() => setSaveMessage(''), 3000);
             return;
         }
 
@@ -247,31 +244,33 @@ const Home: FC<HomeProps> = () => {
             {saveMessage && <p className="save-message">{saveMessage}</p>}
 
             {dataList.length > 0 && (
-                <table className="data-table">
-                    <thead>
-                        <tr>
-                            <th>Number</th>
-                            <th>Count</th>
-                            <th>Type</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                  
-                     <tbody>
-                         {dataList.map((data, index) => (
-                             <tr key={index}>
-                                 <td>{data.number}</td>
-                                 <td>{data.count}</td>
-                                 <td>{data.type}</td>
-                                 <td>
-                                     <button className='delete' onClick={() => handleDelete(data.number)}>
-                                         <IconTrash stroke={2} />
-                                     </button>
-                                 </td>
-                             </tr>
-                         ))}
-                     </tbody>
-                </table>
+                <div className="data-table-container">
+                    <table className="data-table">
+                        <thead>
+                            <tr>
+                                <th>Number</th>
+                                <th>Count</th>
+                                <th>Type</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {dataList.map((data, index) => (
+                                <tr key={index}>
+                                    <td>{data.number}</td>
+                                    <td>{data.count}</td>
+                                    <td>{data.type}</td>
+                                    <td>
+                                        <button className='delete' onClick={() => handleDelete(data.number)}>
+                                            <IconTrash stroke={2} />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             )}
         </div>
     );

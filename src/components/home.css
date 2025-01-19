@@ -5,10 +5,15 @@
     gap: 1rem;
     width: 100%; /* Ensure inputs take full width */
 }
+
 .block-message {
     color: red;
     font-weight: bold;
     margin-top: 10px;
+}
+table{
+    overflow-y: auto; /* Enable vertical scrolling */
+
 }
 .delete{
     background-color:transparent;
@@ -85,6 +90,16 @@ button:active {
     text-align: center;
     font-size: 1.1rem;
 }
+.data-table-container {
+    max-height: 400px; /* Set a maximum height for the table container */
+    overflow-y: auto;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    margin-top: 2rem;
+}
+
+/* Table Styling 
 
 /* Responsive design for smaller screens */
 @media (max-width: 768px) {
