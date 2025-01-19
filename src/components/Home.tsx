@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import './home.css';
 import { IconTrash } from '@tabler/icons-react';
-import { reportData, getNumberCountFromDb } from '../services/allApi'; // Assuming getNumberCountFromDb is the API call to check the number in DB
+import { reportData, getNumberCountFromDb } from '../services/allApi';
 
 interface DataType {
     number: string;
@@ -44,11 +44,21 @@ const Home: FC<HomeProps> = () => {
             setRadioValue(storedRadioValue);
         }
 
-        // Disable scrolling when on the Home page
+        // Disable scrolling on the Home page (body overflow hidden)
         document.body.style.overflow = 'hidden';
 
+        // Prevent scroll refresh behavior
+        const handleWheel = (e: WheelEvent) => {
+            e.preventDefault(); // Prevent page refresh or unexpected behavior when scrolling
+        };
+
+        // Attach event listener for wheel (scrolling)
+        window.addEventListener('wheel', handleWheel, { passive: false });
+
         return () => {
-            document.body.style.overflow = 'auto';
+            // Cleanup event listener on component unmount
+            window.removeEventListener('wheel', handleWheel);
+            document.body.style.overflow = 'auto'; // Re-enable scrolling when component unmounts
         };
     }, []);
 
