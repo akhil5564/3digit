@@ -101,7 +101,12 @@ const Report: FC = () => {
   }
 
   return (
+
+
     <div className="report-container">
+
+
+      
       <div className="fix">
         <button className="clear-button" onClick={clearData}>
           Clear All
