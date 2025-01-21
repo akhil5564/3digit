@@ -33,9 +33,10 @@
   background-color: #191515cd;
   height: 6rem;
   justify-content: end;
+  position: fixed;
+  width: 100%;
+
 }
-
-
 
 .report-table th,
 .report-table td {
