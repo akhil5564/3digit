@@ -91,7 +91,7 @@ button:active {
     font-size: 1.1rem;
 }
 .data-table-container {
-    max-height: 400px; /* Set a maximum height for the table container */
+    max-height: 480px; /* Set a maximum height for the table container */
     overflow-y: auto;
     width: 100%;
     border: 1px solid #ccc;
@@ -151,7 +151,6 @@ font-weight: 500;}
 
 .data-table th, .data-table td {
     border: 1px solid #ccc;
-    padding: 5px;
     text-align: left;
 }
 

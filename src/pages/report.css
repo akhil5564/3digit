@@ -20,6 +20,7 @@
   border-radius: 70px;
 }
 
+
 .report-table {
   width: 100%;
   border-collapse: collapse;
@@ -28,17 +29,17 @@
 .total-count {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #333;
-  background-color: #caa1a1;
+  color: #eddddd;
+  background-color: #191515cd;
   height: 6rem;
+  justify-content: end;
 }
 
 
 
 .report-table th,
 .report-table td {
-  padding: 10px;
-  text-align: left;
+  text-align: center;
   border-bottom: 1px solid #ddd;
 }
 
@@ -83,7 +84,7 @@
 /* Scrollable tbody */
 .report-table tbody {
   display: block;
-  max-height: 400px; /* Adjust the height as per your requirement */
+  max-height: 460px; /* Adjust the height as per your requirement */
   overflow-y: auto;
 }
 
@@ -103,5 +104,7 @@
 .tbody{
 overflow-y: auto;
 
+
 }
+
 

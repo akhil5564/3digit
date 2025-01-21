@@ -118,7 +118,7 @@ const Report: FC = () => {
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className='tbd'>
           {data.map((item) => (
             <tr key={item._id}>
               <td>{String(item.number).padStart(3, '0')}</td> {/* Ensure 3 digits for number */}
@@ -145,6 +145,7 @@ const Report: FC = () => {
         <p>Total Sale:  {totalsales}</p>
       </div>
     </div>
+     
   );
 };
 
