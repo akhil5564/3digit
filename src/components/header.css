@@ -65,8 +65,3 @@ h1 {
 .dropdown li:hover {
     background-color: whitesmoke;
 }
-
-/* Add padding to the body or main content area to ensure the content doesn't get hidden behind the fixed header */
-body {
-    margin-top: 60px;  /* Adjust this based on the height of your header */
-}

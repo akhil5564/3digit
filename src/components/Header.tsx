@@ -17,31 +17,36 @@ const Header: FC<HeaderProps> = ({ setPastedData }) => {
   const toggleDropdown = () => {
     setIsDropdownOpen(prevState => !prevState);
   };
-
   const handleClipboard = async () => {
     try {
-      const text = await navigator.clipboard.readText();
-      const regex = /^(\d{3})=(\d{1})$/;
-
+      // Ensure this is inside a user-initiated event
+      if (!navigator.clipboard) {
+        alert('Clipboard API not supported in this browser.');
+        return;
+      }
+  
+      const text = await navigator.clipboard.readText(); // Read the clipboard content
+      console.log('Pasted text:', text); // For debugging, check what we are pasting
+  
+      const regex = /^(\d{3})=(\d{1})$/; // Validate "123=5" format
       const match = text.match(regex);
-
       if (match) {
         const number = match[1];
         const count = match[2];
-
+  
         // Pass the pasted data back to the parent (App)
         setPastedData({ number, count });
-
         alert(`Data saved: Number = ${number}, Count = ${count}`);
       } else {
         alert('Invalid format. Please use the format: "123=5"');
       }
     } catch (err) {
-      console.error('Failed to read clipboard content: ', err);
-      alert('Failed to read clipboard content');
+      console.error('Failed to read clipboard content:', err);
+      alert('Failed to read clipboard content. Please try again.');
     }
   };
-
+  
+  
   return (
     <>
       <div className='calc'>

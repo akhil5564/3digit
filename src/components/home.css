@@ -52,7 +52,7 @@ input::placeholder {
 /* Styling for the radio button container */
 .radio {
     display: flex; /* Stack radio buttons vertically on mobile */
-    justify-content: center;
+    justify-content: center ;
     gap: 1.5rem;
     margin-top: 1rem;
 }
@@ -139,6 +139,8 @@ button:active {
         font-size: 1.2rem; /* Slightly larger font for the success message */
     }
 }
+.count{
+font-weight: 500;}
 
 /* Styling for the data table */
 .data-table {
@@ -157,6 +159,7 @@ button:active {
     background-color: #f4f4f4;
     font-weight: bold;
 }
+
 
 .data-table tr:nth-child(even) {
     background-color: #f9f9f9;

@@ -25,6 +25,14 @@
   border-collapse: collapse;
   table-layout: fixed;
 }
+.total-count {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  background-color: #caa1a1;
+  height: 6rem;
+}
+
 
 
 .report-table th,

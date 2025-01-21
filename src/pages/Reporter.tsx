@@ -81,6 +81,10 @@ const Report: FC = () => {
     return date.toLocaleString(); // You can customize the date format as needed
   };
 
+  // Calculate the sum of all counts in the data
+  const totalCount = data.reduce((sum, item) => sum + item.count, 0);
+  const totalsales = totalCount * 10
+
   // If loading, show a loading message
   if (loading) {
     return <p className="loading">Loading...</p>;
@@ -103,6 +107,8 @@ const Report: FC = () => {
           Clear All
         </button>
       </div>
+      
+      
       <table className="report-table">
         <thead>
           <tr>
@@ -131,8 +137,16 @@ const Report: FC = () => {
           ))}
         </tbody>
       </table>
+
+       
+      {/* Display Total Count */}
+      <div className="total-count">
+        <p>Total Count: {totalCount}</p>
+        <p>Total Sale:  {totalsales}</p>
+      </div>
     </div>
   );
 };
+
 
 export default Report;
