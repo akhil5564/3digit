@@ -8,19 +8,6 @@
 }
 
 
-/* Scrollbar customization for tbody */
-.report-table tbody::-webkit-scrollbar {
-  width: 32px;
-  height: 50px;
-   /* Adjust width for vertical scrollbar */
-
-}
-.report-table tbody::-webkit-scrollbar-thumb {
-  background-color: #888;
-  border-radius: 70px;
-}
-
-
 .report-table {
   width: 100%;
   border-collapse: collapse;
@@ -85,7 +72,7 @@
 /* Scrollable tbody */
 .report-table tbody {
   display: block;
-  max-height: 460px; /* Adjust the height as per your requirement */
+  max-height: 420px; /* Adjust the height as per your requirement */
   overflow-y: auto;
 }
 

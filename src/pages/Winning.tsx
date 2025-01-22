@@ -1,6 +1,6 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState } from 'react';
 import axios from 'axios';
-import './winnig.css'
+import './winnig.css';
 
 interface WinningProps {}
 
@@ -8,26 +8,8 @@ const Winning: FC<WinningProps> = () => {
   const [numberInput, setNumberInput] = useState<string>(''); // Store user input
   const [errorMessage, setErrorMessage] = useState<string>(''); // Error message for invalid input
   const [loading, setLoading] = useState<boolean>(false); // Loading state to indicate request in progress
-  const [successMessage, setSuccessMessage] = useState<string>(''); // Success message after saving data
-  const [totalCount, setTotalCount] = useState<number>(0); // State to store the sum of all counts
-
-  // Fetch total count from the backend when the component mounts
-  const fetchTotalCount = async () => {
-    try {
-      const response = await axios.get('https://your-backend-api-url.com/total-count');
-      if (response.data && response.data.totalCount !== undefined) {
-        setTotalCount(response.data.totalCount); // Update the total count
-      }
-    } catch (error) {
-      console.error(error);
-      setErrorMessage('Error fetching total count. Please try again later.');
-    }
-  };
-
-  // Call fetchTotalCount when the component mounts
-  useEffect(() => {
-    fetchTotalCount();
-  }, []);
+  const [data, setData] = useState<any | null>(null); // Store data fetched from API
+  const [notFound, setNotFound] = useState<boolean>(false); // Track if the number was found or not
 
   // Handle the change in the number input
   const handleNumberInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,28 +24,23 @@ const Winning: FC<WinningProps> = () => {
     }
 
     setLoading(true);
-    setErrorMessage('');
-    setSuccessMessage('');
+    setErrorMessage(''); // Clear any previous error messages
+    setNotFound(false); // Reset the not found state
+    setData(null); // Clear any previously displayed data
 
     try {
-      // Call the backend to map the number in the database
-      const dataToSave = {
-        number: numberInput,
-        count: 1, // You can adjust this logic as needed
-      };
-
-      // Send the data to the backend (for example using POST to save it)
-      const response = await axios.post('https://your-backend-api-url.com/data', dataToSave);
-
-      if (response.status === 200 || response.status === 201) {
-        setSuccessMessage('Data successfully saved/updated!');
-        fetchTotalCount(); // After saving, fetch the updated total count
-      }
+      // Fetch data from the backend API using the correct URL for searching by number
+      const response = await axios.get(`https://threed-backend-uodx.onrender.com/data/${numberInput}`);
+      
+      // If the data exists, store it
+      setData(response.data);
     } catch (error) {
-      console.error(error);
-      setErrorMessage('Error saving data. Please try again later.');
+      // If an error occurs or no data is found
+      console.error('Error fetching data:', error);
+      setErrorMessage('No data found for this number.');
+      setNotFound(true); // Show not found message
     } finally {
-      setLoading(false);
+      setLoading(false); // Turn off loading once the request is completed
     }
   };
 
@@ -87,13 +64,18 @@ const Winning: FC<WinningProps> = () => {
       {/* Show error message if there was an error */}
       {errorMessage && <p className="error-message" style={{ color: 'red' }}>{errorMessage}</p>}
 
-      {/* Show success message if data was saved/updated */}
-      {successMessage && <p className="success-message" style={{ color: 'green' }}>{successMessage}</p>}
+      {/* Show data if found */}
+      {data && (
+        <div className="result-container">
+          <h2>Data for Number {data.number}</h2>
+          <p><strong>Count:</strong> {data.count}</p>
+          <p><strong>Type:</strong> {data.type}</p>
+          <p><strong>Created At:</strong> {new Date(data.createdAt).toLocaleString()}</p>
+        </div>
+      )}
 
-      {/* Display total count at the bottom */}
-      <div className="total-count-container">
-        <h3>Total Count of All Numbers: {totalCount}</h3>
-      </div>
+      {/* If no data found for the entered number */}
+      {notFound && <p className="error-message" style={{ color: 'red' }}>No data found for this number.</p>}
     </div>
   );
 };

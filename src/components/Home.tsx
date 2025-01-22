@@ -4,6 +4,7 @@ import { IconTrash } from '@tabler/icons-react';
 import { reportData, getNumberCountFromDb } from '../services/allApi';
 
 interface DataType {
+    createdAt: string | number | Date;
     number: string;
     count: string;
     type: string;
@@ -275,36 +276,46 @@ const Home: FC<HomeProps> = () => {
                                 <th>Action</th>
                             </tr>
                         </thead>
-
                         <tbody>
-                            {/* Display pasted data first, if exists */}
-                            {pastedData && (
-                                <tr key="pasted-data">
-                                    <td>{pastedData.number}</td>
-                                    <td>{pastedData.count}</td>
-                                    <td>{pastedData.type}</td>
-                                    <td>
-                                        <button className='delete' onClick={() => handleDelete(pastedData.number)}>
-                                            <IconTrash stroke={2} />
-                                        </button>
-                                    </td>
-                                </tr>
-                            )}
+  {/* Display pasted data first, if exists */}
+  {pastedData && (
+    <tr key={pastedData.number}>
+      <td>{pastedData.number}</td>
+      <td>{pastedData.count}</td>
+      <td>{pastedData.type}</td>
+      <td>
+        <button
+          className="delete"
+          onClick={() => handleDelete(pastedData.number)}
+          aria-label={`Delete pasted item with number ${pastedData.number}`} // Accessibility improvement
+        >
+          <IconTrash stroke={2} />
+        </button>
+      </td>
+    </tr>
+  )}
 
-                            {/* Display all items in dataList */}
-                            {dataList.map((data, index) => (
-                                <tr key={index}>
-                                    <td>{data.number}</td>
-                                    <td>{data.count}</td>
-                                    <td>{data.type}</td>
-                                    <td>
-                                        <button className='delete' onClick={() => handleDelete(data.number)}>
-                                            <IconTrash stroke={2} />
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
+  {/* Sort the data based on 'createdAt' so the latest added items come first */}
+  {[...(pastedData ? [pastedData] : []), ...dataList]
+    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()) // Sort by createdAt (ascending)
+    .map((data) => (
+      <tr key={data.number}>  {/* Using number as a unique key */}
+        <td>{data.number}</td>
+        <td>{data.count}</td>
+        <td>{data.type}</td>
+        <td>
+          <button
+            className="delete"
+            onClick={() => handleDelete(data.number)}
+            aria-label={`Delete item with number ${data.number}`} // Accessibility improvement
+          >
+            <IconTrash stroke={2} />
+          </button>
+        </td>
+      </tr>
+    ))}
+</tbody>
+
                     </table>
                 </div>
             )}
