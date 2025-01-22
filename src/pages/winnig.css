@@ -1,41 +1,95 @@
+/* General container */
 .winning-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-  }
-  
-  .search-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  input[type="text"] {
-    width: 150px;
-    height: 30px;
-    padding: 5px;
-    font-size: 16px;
-    margin-right: 10px;
-    text-align: center;
-  }
-  
-  button {
-    padding: 5px 15px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  button:disabled {
-    background-color: lightgray;
-    cursor: not-allowed;
-  }
-  
-  .error-message {
-    color: red;
-  }
-  
-  .success-message {
-    color: green;
-  }
-  
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #f4f4f4;
+  max-width: 600px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Title */
+.winning-container h1 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+/* Search container */
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Input field */
+.search-container input {
+  padding: 0.8rem;
+  font-size: 1rem;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  width: 150px;
+  text-align: center;
+  transition: border-color 0.3s ease;
+}
+
+.search-container input:focus {
+  border-color: #007BFF;
+  outline: none;
+}
+
+/* Button */
+.search-container button {
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #007BFF;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-container button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.search-container button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+/* Error message */
+.error-message {
+  font-size: 1rem;
+  color: red;
+  margin-top: 1rem;
+}
+
+/* Result container */
+.result-container {
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 2rem;
+}
+
+.result-container h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.result-container p {
+  font-size: 1.2rem;
+  color: #555;
+  margin: 0.5rem 0;
+}
+
+.result-container strong {
+  color: #333;
+}
