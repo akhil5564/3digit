@@ -23,17 +23,17 @@ h1 {
     margin-left: 10px;
 }
 .icon2{
-    align-items: end;
-    margin-left: 11rem;
+        margin-left: 11rem;
     width: 1rem;
-    height: 1rem;
-    margin-bottom: 5px;
+    height: 2rem;
 }
 
 .icon {
     cursor: pointer;
     width: 1rem;
     height: 1rem;
+    height: 2rem;
+
     
 }
 
