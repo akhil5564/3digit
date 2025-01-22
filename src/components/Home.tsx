@@ -4,7 +4,6 @@ import { IconTrash } from '@tabler/icons-react';
 import { reportData, getNumberCountFromDb } from '../services/allApi';
 
 interface DataType {
-    createdAt: string | number | Date;
     number: string;
     count: string;
     type: string;
@@ -49,14 +48,6 @@ const Home: FC<HomeProps> = () => {
         // Disable scrolling on the Home page (body overflow hidden)
         document.body.style.overflow = 'hidden';
 
-        // Prevent scroll refresh behavior
-        const handleWheel = (e: WheelEvent) => {
-            e.preventDefault(); // Prevent page refresh or unexpected behavior when scrolling
-        };
-
-        // Attach event listener for wheel (scrolling)
-        window.addEventListener('wheel', handleWheel, { passive: false });
-
         return () => {
             // Cleanup event listener on component unmount
             window.removeEventListener('wheel', handleWheel);
@@ -77,51 +68,59 @@ const Home: FC<HomeProps> = () => {
             setTimeout(() => setSaveMessage(''), 3000);
             return;
         }
-
+    
         const newCount = Number(secondInput);
-
+    
         try {
+            // Fetch existing count from DB
             const existingCountResponse = await getNumberCountFromDb(firstInput);
-
+    
             if (existingCountResponse && existingCountResponse.status === 200) {
-                const { count, number } = existingCountResponse.data;
-                const totalCount = Number(count) + newCount;
-                const balance = 5 - totalCount + newCount;
-
-                if (totalCount > 5) {
-                    setSaveMessage(`Blocked: ${number} (${balance})`);
-                    setTimeout(() => setSaveMessage(''), 3000);
-                    return;
-                }
-
-                const updatedDataList = dataList.map(item => {
-                    if (item.number === firstInput) {
-                        return { ...item, count: (Number(item.count) + newCount).toString() };
+                const { count, number } = existingCountResponse.data; // Assuming the response data is in this structure
+    
+                if (count && number) {  // Make sure count and number exist
+                    const totalCount = Number(count) + newCount;
+                    const balance = 5 - totalCount + newCount;
+    
+                    if (totalCount > 5) {
+                        setSaveMessage(`Blocked: ${number} (${balance})`);
+                        setTimeout(() => setSaveMessage(''), 3000);
+                        return;
                     }
-                    return item;
-                });
-
-                setDataList(updatedDataList);
-
-                if (!updatedDataList.some(item => item.number === firstInput)) {
-                    const newData: DataType = {
-                        number: firstInput,
-                        count: secondInput,
-                        type: radioValue,
-                    };
-                    setDataList([...dataList, newData]);
+    
+                    const updatedDataList = dataList.map(item => {
+                        if (item.number === firstInput) {
+                            return { ...item, count: (Number(item.count) + newCount).toString() };
+                        }
+                        return item;
+                    });
+    
+                    setDataList(updatedDataList);
+    
+                    if (!updatedDataList.some(item => item.number === firstInput)) {
+                        const newData: DataType = {
+                            number: firstInput,
+                            count: secondInput,
+                            type: radioValue,
+                        };
+                        setDataList([...dataList, newData]);
+                    }
+                } else {
+                    setSaveMessage("Invalid response structure from DB.");
+                    setTimeout(() => setSaveMessage(''), 3000);
                 }
             } else {
-                setSaveMessage(existingCountResponse.data.message);
+                // Handle case when the response status is not 200
+                setSaveMessage(existingCountResponse?.data?.message || 'Unknown error');
                 setTimeout(() => setSaveMessage(''), 3000);
-
+    
                 const newData: DataType = {
                     number: firstInput,
                     count: secondInput,
                     type: radioValue,
                 };
                 setDataList([...dataList, newData]);
-
+    
                 setSaveMessage('');
                 setTimeout(() => setSaveMessage(''), 3000);
             }
@@ -130,16 +129,16 @@ const Home: FC<HomeProps> = () => {
             setSaveMessage('Error: Count not fetched from the database.');
             setTimeout(() => setSaveMessage(''), 3000);
         }
-
+    
         setFirstInput('');
         setSecondInput('');
         setRadioValue('super');
-
+    
         if (firstInputRef.current) {
             firstInputRef.current.focus();
         }
     };
-
+    
     const handleSave = async () => {
         const totalCount = dataList.reduce((sum, data) => sum + Number(data.count), 0);
 
@@ -276,46 +275,36 @@ const Home: FC<HomeProps> = () => {
                                 <th>Action</th>
                             </tr>
                         </thead>
+
                         <tbody>
-  {/* Display pasted data first, if exists */}
-  {pastedData && (
-    <tr key={pastedData.number}>
-      <td>{pastedData.number}</td>
-      <td>{pastedData.count}</td>
-      <td>{pastedData.type}</td>
-      <td>
-        <button
-          className="delete"
-          onClick={() => handleDelete(pastedData.number)}
-          aria-label={`Delete pasted item with number ${pastedData.number}`} // Accessibility improvement
-        >
-          <IconTrash stroke={2} />
-        </button>
-      </td>
-    </tr>
-  )}
+                            {/* Display pasted data first, if exists */}
+                            {pastedData && (
+                                <tr key="pasted-data">
+                                    <td>{pastedData.number}</td>
+                                    <td>{pastedData.count}</td>
+                                    <td>{pastedData.type}</td>
+                                    <td>
+                                        <button className='delete' onClick={() => handleDelete(pastedData.number)}>
+                                            <IconTrash stroke={2} />
+                                        </button>
+                                    </td>
+                                </tr>
+                            )}
 
-  {/* Sort the data based on 'createdAt' so the latest added items come first */}
-  {[...(pastedData ? [pastedData] : []), ...dataList]
-    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()) // Sort by createdAt (ascending)
-    .map((data) => (
-      <tr key={data.number}>  {/* Using number as a unique key */}
-        <td>{data.number}</td>
-        <td>{data.count}</td>
-        <td>{data.type}</td>
-        <td>
-          <button
-            className="delete"
-            onClick={() => handleDelete(data.number)}
-            aria-label={`Delete item with number ${data.number}`} // Accessibility improvement
-          >
-            <IconTrash stroke={2} />
-          </button>
-        </td>
-      </tr>
-    ))}
-</tbody>
-
+                            {/* Display all items in dataList */}
+                            {dataList.map((data, index) => (
+                                <tr key={index}>
+                                    <td>{data.number}</td>
+                                    <td>{data.count}</td>
+                                    <td>{data.type}</td>
+                                    <td>
+                                        <button className='delete' onClick={() => handleDelete(data.number)}>
+                                            <IconTrash stroke={2} />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
                     </table>
                 </div>
             )}

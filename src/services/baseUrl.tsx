@@ -1,1 +1,1 @@
-export const basUrl='https://threed-backend-uodx.onrender.com'
+export const basUrl='http://localhost:5000'
