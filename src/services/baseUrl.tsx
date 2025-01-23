@@ -1,1 +1,1 @@
-export const basUrl='https://threed-backend-1.onrender.com'
+export const basUrl='https://threed-backend-uodx.onrender.com'

@@ -24,7 +24,7 @@ const Report: FC = () => {
 
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://threed-backend-1.onrender.com/data');
+        const response = await axios.get('https://threed-backend-uodx.onrender.com/data');
         console.log('API Response:', response.data);
 
         if (Array.isArray(response.data)) {
@@ -51,7 +51,7 @@ const Report: FC = () => {
   // Function to clear all data both from the frontend and backend
   const clearData = async () => {
     try {
-      const response = await axios.delete('https://threed-backend-1.onrender.com/clearData');
+      const response = await axios.delete('https://threed-backend-uodx.onrender.com/clearData');
       console.log(response.data); // Log the response from backend (success message)
 
       setData([]); // Clear frontend data
