@@ -24,7 +24,7 @@ const Report: FC = () => {
 
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://threed-backend-uodx.onrender.com/data');
+        const response = await axios.get('https://threed-backend-1.onrender.com/data');
         console.log('API Response:', response.data);
 
         if (Array.isArray(response.data)) {
@@ -65,7 +65,7 @@ const Report: FC = () => {
   const deleteItem = async (id: string) => {
     try {
       console.log(`Deleting item with id: ${id}`); // Log the id being passed
-      const response = await axios.delete(`https://threed-backend-uodx.onrender.com/data/${id}`);
+      const response = await axios.delete(`https://threed-backend-1.onrender.com/data/${id}`);
       console.log('Item deleted:', response.data);
 
       setData((prevData) => prevData.filter((item) => item._id !== id)); // Update state
