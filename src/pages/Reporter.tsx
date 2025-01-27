@@ -65,7 +65,7 @@ const Report: FC = () => {
   const deleteItem = async (id: string) => {
     try {
       console.log(`Deleting item with id: ${id}`); // Log the id being passed
-      const response = await axios.delete(`https://threed-backend-1.onrender.com/data/${id}`);
+      const response = await axios.delete(`https://threed-backend-uodx.onrender.com/data/${id}`);
       console.log('Item deleted:', response.data);
 
       setData((prevData) => prevData.filter((item) => item._id !== id)); // Update state
@@ -101,12 +101,7 @@ const Report: FC = () => {
   }
 
   return (
-
-
     <div className="report-container">
-
-
-      
       <div className="fix">
         <button className="clear-button" onClick={clearData}>
           Clear All

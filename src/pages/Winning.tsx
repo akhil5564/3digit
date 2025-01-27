@@ -8,8 +8,9 @@ const Winning: FC<WinningProps> = () => {
   const [numberInput, setNumberInput] = useState<string>(''); // Store user input
   const [errorMessage, setErrorMessage] = useState<string>(''); // Error message for invalid input
   const [loading, setLoading] = useState<boolean>(false); // Loading state to indicate request in progress
-  const [data, setData] = useState<any | null>(null); // Store data fetched from API
-  const [notFound, setNotFound] = useState<boolean>(false); // Track if the number was found or not
+  const [successMessage, setSuccessMessage] = useState<string>(''); // Success message after saving data
+  const [totalCount, setTotalCount] = useState<number>(0); // State to store the sum of all counts
+  const [fullArray, setFullArray] = useState<any[]>([]); // State to store the full array
 
   // Handle the change in the number input
   const handleNumberInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,23 +25,26 @@ const Winning: FC<WinningProps> = () => {
     }
 
     setLoading(true);
-    setErrorMessage(''); // Clear any previous error messages
-    setNotFound(false); // Reset the not found state
-    setData(null); // Clear any previously displayed data
+    setErrorMessage('');
+    setSuccessMessage('');
+    setFullArray([]); // Clear previous results
 
     try {
-      // Fetch data from the backend API using the correct URL for searching by number
-      const response = await axios.get(`https://threed-backend-uodx.onrender.com/data/${numberInput}`);
-      
-      // If the data exists, store it
-      setData(response.data);
+      // First, check if the number already exists in the database
+      const response = await axios.get(`http://localhost:5000/data/${numberInput}`);
+
+      if (response.status === 200) {
+        // If the number exists, display the full array
+        setFullArray(response.data);
+        setSuccessMessage('Number found in the database!');
+      } else {
+        setErrorMessage('Number not found.');
+      }
     } catch (error) {
-      // If an error occurs or no data is found
-      console.error('Error fetching data:', error);
-      setErrorMessage('No data found for this number.');
-      setNotFound(true); // Show not found message
+      console.error(error);
+      setErrorMessage('Error retrieving data. Please try again later.');
     } finally {
-      setLoading(false); // Turn off loading once the request is completed
+      setLoading(false);
     }
   };
 
@@ -64,18 +68,16 @@ const Winning: FC<WinningProps> = () => {
       {/* Show error message if there was an error */}
       {errorMessage && <p className="error-message" style={{ color: 'red' }}>{errorMessage}</p>}
 
-      {/* Show data if found */}
-      {data && (
-        <div className="result-container">
-          <h2>Data for Number {data.number}</h2>
-          <p><strong>Count:</strong> {data.count}</p>
-          <p><strong>Type:</strong> {data.type}</p>
-          <p><strong>Created At:</strong> {new Date(data.createdAt).toLocaleString()}</p>
+      {/* Show success message if data was found */}
+      {successMessage && <p className="success-message" style={{ color: 'green' }}>{successMessage}</p>}
+
+      {/* Show the full array if the number was found */}
+      {fullArray.length > 0 && (
+        <div className="full-array">
+          <h2>Full Data Array:</h2>
+          <pre>{JSON.stringify(fullArray, null, 2)}</pre> {/* Display full array in a readable format */}
         </div>
       )}
-
-      {/* If no data found for the entered number */}
-      {notFound && <p className="error-message" style={{ color: 'red' }}>No data found for this number.</p>}
     </div>
   );
 };
