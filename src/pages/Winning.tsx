@@ -9,7 +9,6 @@ const Winning: FC<WinningProps> = () => {
   const [errorMessage, setErrorMessage] = useState<string>(''); // Error message for invalid input
   const [loading, setLoading] = useState<boolean>(false); // Loading state to indicate request in progress
   const [successMessage, setSuccessMessage] = useState<string>(''); // Success message after saving data
-  const [totalCount, setTotalCount] = useState<number>(0); // State to store the sum of all counts
   const [fullArray, setFullArray] = useState<any[]>([]); // State to store the full array
 
   // Handle the change in the number input

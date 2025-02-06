@@ -85,9 +85,9 @@ const Home: FC<HomeProps> = () => {
             if (existingCountResponse && existingCountResponse.status === 200) {
                 const { count, number } = existingCountResponse.data;
                 const totalCount = Number(count) + newCount;
-                const balance = 5 - totalCount + newCount;
+                const balance = 2 - totalCount + newCount;
 
-                if (totalCount > 5) {
+                if (totalCount > 2) {
                     setSaveMessage(`Blocked: ${number} (${balance})`);
                     setTimeout(() => setSaveMessage(''), 3000);
                     return;
@@ -143,7 +143,7 @@ const Home: FC<HomeProps> = () => {
         const totalCount = dataList.reduce((sum, data) => sum + Number(data.count), 0);
 
         if (totalCount > 100) {
-            setSaveMessage('Error: The sum of counts exceeds the allowed limit of 5.');
+            setSaveMessage('Error: The sum of counts exceeds the allowed limit of 2.');
             setTimeout(() => setSaveMessage(''), 3000);
             return;
         }
@@ -157,7 +157,7 @@ const Home: FC<HomeProps> = () => {
                 setSaveMessage('Data saved successfully!');
                 setDataList([]);
             } else if (result.status === 400) {
-                setSaveMessage('Error: The sum of counts exceeds the allowed limit of 5.');
+                setSaveMessage('Error: The sum of counts exceeds the allowed limit of 2.');
             }
         } catch (error) {
             console.log(error);
