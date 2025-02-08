@@ -13,10 +13,7 @@ html, body {
 
 /* Use flexbox to center the login box */
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f0f2f5;
+  
 }
 
 .login-container {
@@ -129,7 +126,6 @@ h2 {
 /* For medium screens (tablets) */
 @media (max-width: 768px) {
   .login-box {
-    padding: 30px;
   }
 
   h2 {
